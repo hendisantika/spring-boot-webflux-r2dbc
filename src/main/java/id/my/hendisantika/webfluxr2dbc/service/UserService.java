@@ -1,8 +1,13 @@
 package id.my.hendisantika.webfluxr2dbc.service;
 
+import id.my.hendisantika.webfluxr2dbc.entity.User;
 import id.my.hendisantika.webfluxr2dbc.repository.UserRepository;
+import id.my.hendisantika.webfluxr2dbc.util.JwtValidationUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,4 +24,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final JwtValidationUtil jwtValidationUtil;
+
+    public Mono<String> getName(String token) {
+        return Mono.just(jwtValidationUtil.getPhone(token))
+                .flatMap(userRepository::findByPhone)
+                .filter(Objects::nonNull)
+                .map(User::getUsername)
+                .switchIfEmpty(Mono.error(new RuntimeException("error when get username - not found phone number")));
+    }
 }
