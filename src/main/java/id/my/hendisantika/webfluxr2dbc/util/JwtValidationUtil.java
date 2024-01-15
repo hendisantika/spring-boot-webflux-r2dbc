@@ -47,4 +47,9 @@ public class JwtValidationUtil {
     private Boolean isExpired(String token) {
         return getExpiryTime(token).before(new Date());
     }
+
+    public boolean isTokenValid(String token, String requestUsername) {
+        final String username = getPhone(token);
+        return (username.equals(requestUsername)) && !isExpired(token);
+    }
 }
