@@ -32,7 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table("public.user")
+@Table("t_user")
 public class User extends BaseEntity implements UserDetails {
 
     @Column("phone")

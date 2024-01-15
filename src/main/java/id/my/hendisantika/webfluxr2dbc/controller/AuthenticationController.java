@@ -61,7 +61,7 @@ public class AuthenticationController extends BaseController {
             @ApiResponse(responseCode = "200", description = "successfully register user"),
             @ApiResponse(responseCode = "500", description = "failed register user")
     })
-    public Mono<ResponseEntity<BaseResponse<RegisterResponse>>> login(@RequestBody RegisterRequest registerRequest) {
+    public Mono<ResponseEntity<BaseResponse<RegisterResponse>>> register(@RequestBody RegisterRequest registerRequest) {
         //TODO : catch error from DTO validation
         return authenticationService.register(registerRequest)
                 .map(user -> ResponseEntity.ok(BaseResponse.<RegisterResponse>builder()

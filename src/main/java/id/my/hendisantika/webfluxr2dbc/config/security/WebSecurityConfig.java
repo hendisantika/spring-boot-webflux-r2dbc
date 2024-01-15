@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono;
 public class WebSecurityConfig {
     private static final String LOGIN_URL = "/login";
     private static final String REGISTER_URL = "/register";
-    private static final String SWAGGER_URL = "/webjars/swagger-ui/**";
+    private static final String SWAGGER_URL = "/swagger-ui/**";
 
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
@@ -54,7 +54,8 @@ public class WebSecurityConfig {
                 .pathMatchers(
                         LOGIN_URL,
                         REGISTER_URL,
-                        SWAGGER_URL
+                        SWAGGER_URL,
+                        "/swagger-ui"
                 )
                 .permitAll()
                 .anyExchange().authenticated()
