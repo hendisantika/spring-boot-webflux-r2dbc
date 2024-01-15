@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : spring-boot-webflux-r2dbc
@@ -36,5 +38,9 @@ public class JwtValidationUtil {
 
     public String getPhone(String token) {
         return getClaimsToken(token).getSubject();
+    }
+
+    public Date getExpiryTime(String token) {
+        return getClaimsToken(token).getExpiration();
     }
 }
