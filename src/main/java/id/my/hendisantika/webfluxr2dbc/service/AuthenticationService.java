@@ -48,4 +48,11 @@ public class AuthenticationService {
 
         return userRepository.save(newUser);
     }
+
+    public Mono<String> login(String phone, String password) {
+        return userRepository.findByPhone(phone)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+                .map(jwtTokenUtil::generateToken)
+                .switchIfEmpty(Mono.error(new RuntimeException("Login failed - not found phone number or wrong password")));
+    }
 }
