@@ -34,4 +34,8 @@ public class JwtTokenUtil {
         claims.put("roles", user.getRoles());
         return buildToken(claims, user, jwtExpiryTime);
     }
+
+    public String generateRefreshToken(User user) {
+        return buildToken(new HashMap<>(), user, jwtRefreshTime);
+    }
 }
