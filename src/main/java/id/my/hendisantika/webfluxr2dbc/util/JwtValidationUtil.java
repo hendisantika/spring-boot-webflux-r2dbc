@@ -1,5 +1,7 @@
 package id.my.hendisantika.webfluxr2dbc.util;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,5 +24,13 @@ public class JwtValidationUtil {
 
     public JwtValidationUtil(JwtKeyUtil jwtKeyUtil1) {
         this.jwtKeyUtil = jwtKeyUtil1;
+    }
+
+    public Claims getClaimsToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(jwtKeyUtil.getPrivateKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
