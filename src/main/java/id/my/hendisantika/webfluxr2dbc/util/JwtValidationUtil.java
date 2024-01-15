@@ -33,4 +33,8 @@ public class JwtValidationUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String getPhone(String token) {
+        return getClaimsToken(token).getSubject();
+    }
 }
