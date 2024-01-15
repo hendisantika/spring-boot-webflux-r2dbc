@@ -3,6 +3,8 @@ package id.my.hendisantika.webfluxr2dbc.controller;
 import id.my.hendisantika.webfluxr2dbc.dto.BaseResponse;
 import id.my.hendisantika.webfluxr2dbc.dto.LoginRequest;
 import id.my.hendisantika.webfluxr2dbc.dto.LoginResponse;
+import id.my.hendisantika.webfluxr2dbc.dto.RegisterRequest;
+import id.my.hendisantika.webfluxr2dbc.dto.RegisterResponse;
 import id.my.hendisantika.webfluxr2dbc.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -52,5 +54,28 @@ public class AuthenticationController extends BaseController {
                                 .message(throwable.getMessage())
                                 .data(new LoginResponse(null))
                                 .build())));
+    }
+
+    @PostMapping("/register")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successfully register user"),
+            @ApiResponse(responseCode = "500", description = "failed register user")
+    })
+    public Mono<ResponseEntity<BaseResponse<RegisterResponse>>> login(@RequestBody RegisterRequest registerRequest) {
+        //TODO : catch error from DTO validation
+        return authenticationService.register(registerRequest)
+                .map(user -> ResponseEntity.ok(BaseResponse.<RegisterResponse>builder()
+                        .code(200)
+                        .message("success")
+                        .data(new RegisterResponse(true))
+                        .build()))
+                .onErrorResume(throwable -> Mono.just(ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(BaseResponse.<RegisterResponse>builder()
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .message(throwable.getMessage())
+                                .data(new RegisterResponse(false))
+                                .build()))
+                );
     }
 }
