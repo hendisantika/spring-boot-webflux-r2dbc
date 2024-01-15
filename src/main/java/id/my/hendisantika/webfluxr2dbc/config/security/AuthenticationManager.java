@@ -3,7 +3,9 @@ package id.my.hendisantika.webfluxr2dbc.config.security;
 import id.my.hendisantika.webfluxr2dbc.util.JwtValidationUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,4 +22,13 @@ import org.springframework.stereotype.Component;
 public class AuthenticationManager implements ReactiveAuthenticationManager {
 
     private final JwtValidationUtil jwtValidationUtil;
+
+    @Override
+    public Mono<Authentication> authenticate(Authentication authentication) {
+        String token = authentication.getCredentials().toString();
+        String phone = jwtValidationUtil.getPhone(token);
+        return Mono.justOrEmpty(jwtValidationUtil.isTokenValid(token, phone))
+                .flatMap(isValid -> AuthenticatePhoneAndToken(phone, token));
+
+    }
 }
