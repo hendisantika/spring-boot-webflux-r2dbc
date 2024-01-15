@@ -51,4 +51,9 @@ public class UserPasswordEncoder implements PasswordEncoder {
             throw new RuntimeException("failed encode password", ex);
         }
     }
+
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return encode(rawPassword).equals(encodedPassword);
+    }
 }
