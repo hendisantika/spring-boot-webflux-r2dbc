@@ -32,4 +32,15 @@ public class UserService {
                 .map(User::getUsername)
                 .switchIfEmpty(Mono.error(new RuntimeException("error when get username - not found phone number")));
     }
+
+    public Mono<User> updateName(String token, String newName) {
+        return Mono.just(jwtValidationUtil.getPhone(token))
+                .flatMap(userRepository::findByPhone)
+                .filter(Objects::nonNull)
+                .switchIfEmpty(Mono.error(new RuntimeException("error when get username - not found phone number")))
+                .flatMap(user -> {
+                    user.setUsername(newName);
+                    return userRepository.save(user);
+                });
+    }
 }
