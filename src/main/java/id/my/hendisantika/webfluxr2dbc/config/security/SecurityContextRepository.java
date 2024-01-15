@@ -1,8 +1,11 @@
 package id.my.hendisantika.webfluxr2dbc.config.security;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,4 +23,9 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
 
     private static final String BEARER = "Bearer ";
     private final AuthenticationManager authenticationManager;
+
+    @Override
+    public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
+        return null;
+    }
 }
