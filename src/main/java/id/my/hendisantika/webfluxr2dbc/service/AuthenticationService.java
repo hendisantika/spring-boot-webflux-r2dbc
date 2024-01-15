@@ -2,6 +2,7 @@ package id.my.hendisantika.webfluxr2dbc.service;
 
 import id.my.hendisantika.webfluxr2dbc.config.security.UserPasswordEncoder;
 import id.my.hendisantika.webfluxr2dbc.dto.RegisterRequest;
+import id.my.hendisantika.webfluxr2dbc.entity.Role;
 import id.my.hendisantika.webfluxr2dbc.entity.User;
 import id.my.hendisantika.webfluxr2dbc.repository.UserRepository;
 import id.my.hendisantika.webfluxr2dbc.util.JwtTokenUtil;
@@ -33,5 +34,18 @@ public class AuthenticationService {
                 .filter(Objects::nonNull)
                 .flatMap(user -> Mono.<User>error(new RuntimeException("Phone number already registered")))
                 .switchIfEmpty(saveNewUser(registerRequest));
+    }
+
+    private Mono<User> saveNewUser(RegisterRequest registerRequest) {
+        User newUser = User.builder()
+                .phone(registerRequest.getPhoneNumber())
+                .username(registerRequest.getName())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .roles(Role.ROLE_USER.name())
+                .enabled(Boolean.TRUE)
+                .createdBy(registerRequest.getName())
+                .build();
+
+        return userRepository.save(newUser);
     }
 }
