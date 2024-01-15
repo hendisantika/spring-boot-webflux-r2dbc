@@ -1,6 +1,7 @@
 package id.my.hendisantika.webfluxr2dbc.service;
 
 import id.my.hendisantika.webfluxr2dbc.config.security.UserPasswordEncoder;
+import id.my.hendisantika.webfluxr2dbc.dto.RegisterRequest;
 import id.my.hendisantika.webfluxr2dbc.entity.User;
 import id.my.hendisantika.webfluxr2dbc.repository.UserRepository;
 import id.my.hendisantika.webfluxr2dbc.util.JwtTokenUtil;
