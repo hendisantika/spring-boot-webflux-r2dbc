@@ -43,4 +43,8 @@ public class JwtValidationUtil {
     public Date getExpiryTime(String token) {
         return getClaimsToken(token).getExpiration();
     }
+
+    private Boolean isExpired(String token) {
+        return getExpiryTime(token).before(new Date());
+    }
 }
