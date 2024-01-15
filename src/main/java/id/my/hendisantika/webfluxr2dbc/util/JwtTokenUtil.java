@@ -1,9 +1,12 @@
 package id.my.hendisantika.webfluxr2dbc.util;
 
 import id.my.hendisantika.webfluxr2dbc.entity.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,5 +40,16 @@ public class JwtTokenUtil {
 
     public String generateRefreshToken(User user) {
         return buildToken(new HashMap<>(), user, jwtRefreshTime);
+    }
+
+    private String buildToken(Map<String, Object> extraClaims, User user, long expiration) {
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(user.getPhone())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(jwtKeyUtil.getPrivateKey(), SignatureAlgorithm.RS256)
+                .compact();
     }
 }
