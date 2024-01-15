@@ -3,9 +3,14 @@ package id.my.hendisantika.webfluxr2dbc.config.security;
 import id.my.hendisantika.webfluxr2dbc.util.JwtValidationUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,5 +35,19 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
         return Mono.justOrEmpty(jwtValidationUtil.isTokenValid(token, phone))
                 .flatMap(isValid -> AuthenticatePhoneAndToken(phone, token));
 
+    }
+
+    private Mono<Authentication> AuthenticatePhoneAndToken(String username, String token) {
+        return Mono.just(jwtValidationUtil.getClaimsToken(token))
+                .map(claims -> {
+                    List<String> roleList = claims.get("roles", List.class);
+                    return new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            roleList.stream()
+                                    .map(SimpleGrantedAuthority::new)
+                                    .collect(Collectors.toList())
+                    );
+                });
     }
 }
