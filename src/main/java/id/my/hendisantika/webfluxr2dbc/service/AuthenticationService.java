@@ -1,8 +1,14 @@
 package id.my.hendisantika.webfluxr2dbc.service;
 
+import id.my.hendisantika.webfluxr2dbc.config.security.UserPasswordEncoder;
+import id.my.hendisantika.webfluxr2dbc.entity.User;
 import id.my.hendisantika.webfluxr2dbc.repository.UserRepository;
+import id.my.hendisantika.webfluxr2dbc.util.JwtTokenUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,4 +26,11 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final UserPasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
+
+    public Mono<User> register(RegisterRequest registerRequest) {
+        return userRepository.findByPhone(registerRequest.getPhoneNumber())
+                .filter(Objects::nonNull)
+                .flatMap(user -> Mono.<User>error(new RuntimeException("Phone number already registered")))
+                .switchIfEmpty(saveNewUser(registerRequest));
+    }
 }
