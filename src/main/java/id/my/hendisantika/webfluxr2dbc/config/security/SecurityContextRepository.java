@@ -1,6 +1,7 @@
 package id.my.hendisantika.webfluxr2dbc.config.security;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
@@ -27,5 +28,12 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
         return null;
+    }
+
+    @Override
+    public Mono<SecurityContext> load(ServerWebExchange exchange) {
+        return Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
+                .filter(authHeader -> authHeader.startsWith(BEARER))
+                .flatMap(this::authenticateUserToken);
     }
 }
