@@ -1,7 +1,11 @@
 package id.my.hendisantika.webfluxr2dbc.util;
 
+import id.my.hendisantika.webfluxr2dbc.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,4 +29,9 @@ public class JwtTokenUtil {
         this.jwtKeyUtil = jwtKeyUtil1;
     }
 
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", user.getRoles());
+        return buildToken(claims, user, jwtExpiryTime);
+    }
 }
